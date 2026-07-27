@@ -17,12 +17,19 @@ const defaultCategories = [
 const defaultQuickBtns = [
     { id: 'q1', label: 'ขายชา (+40)', type: 'income', category: 'tea', amount: '40', icon: '🍵' },
     { id: 'q2', label: 'ขายกาแฟ (+50)', type: 'income', category: 'coffee', amount: '50', icon: '☕' },
+    { id: 'q5', label: 'ขายน้ำอัดลม (+20)', type: 'income', category: 'fruit', amount: '20', icon: '🥤' },
     { id: 'q3', label: 'ซื้อวัตถุดิบ', type: 'expense', category: 'ingredient', amount: '', icon: '🍋' },
     { id: 'q4', label: 'ซื้อแก้ว/หลอด', type: 'expense', category: 'packaging', amount: '', icon: '🥤' }
 ];
 
 let categories = JSON.parse(localStorage.getItem('beverage_shop_categories')) || defaultCategories;
 let quickBtns = JSON.parse(localStorage.getItem('beverage_shop_quick_btns')) || defaultQuickBtns;
+
+// Migration: Auto-add soft drink button if it is not present in the existing quick buttons
+if (Array.isArray(quickBtns) && !quickBtns.some(btn => btn.label.includes('น้ำอัดลม'))) {
+    quickBtns.push({ id: 'q5', label: 'ขายน้ำอัดลม (+20)', type: 'income', category: 'fruit', amount: '20', icon: '🥤' });
+    localStorage.setItem('beverage_shop_quick_btns', JSON.stringify(quickBtns));
+}
 
 // DOM Elements
 const balanceAmountEl = document.getElementById('balance-amount');
