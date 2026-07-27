@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>บัญชีธุรกิจ - บันทึกรายรับรายจ่าย</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header>
+            <div class="brand-section">
+                <span class="logo-icon">🍹</span>
+                <h1>บัญชีธุรกิจ & ร้านค้า</h1>
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <button class="theme-toggle-btn" id="settings-toggle" aria-label="Open Settings" onclick="openSettingsModal()">⚙️</button>
+                <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle Theme">🌙</button>
+            </div>
+        </header>
+
+        <!-- Balance Card -->
+        <div class="balance-card">
+            <div class="balance-label">ยอดเงินคงเหลือในระบบ</div>
+            <div class="balance-amount" id="balance-amount">฿0.00</div>
+            <div class="income-expense-summary">
+                <div class="summary-item income-item">
+                    <span class="summary-label">รายรับทั้งหมด</span>
+                    <span class="summary-val plus" id="income-total">฿0</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">รายจ่ายทั้งหมด</span>
+                    <span class="summary-val minus" id="expense-total">฿0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Add Section -->
+        <h2 class="section-title">บันทึกด่วน</h2>
+        <div class="quick-add-grid" id="quick-add-grid">
+            <!-- Loaded dynamically via JS -->
+        </div>
+
+        <!-- Tabs Navigation -->
+        <div class="summary-tabs">
+            <button class="tab-btn active" id="tab-today">วันนี้</button>
+            <button class="tab-btn" id="tab-daily">สรุปรายวัน</button>
+            <button class="tab-btn" id="tab-monthly">สรุปรายเดือน</button>
+        </div>
+
+        <!-- Today's Transactions View -->
+        <div class="view-section active" id="section-today">
+            <div class="transaction-list" id="transaction-list">
+                <!-- Data loaded dynamically via JS -->
+            </div>
+        </div>
+
+        <!-- Daily Summary View -->
+        <div class="view-section" id="section-daily">
+            <div class="transaction-list" id="daily-summary-list">
+                <!-- Data loaded dynamically via JS -->
+            </div>
+        </div>
+
+        <!-- Monthly Summary View -->
+        <div class="view-section" id="section-monthly">
+            <div class="transaction-list" id="monthly-list">
+                <!-- Data loaded dynamically via JS -->
+            </div>
+        </div>
+
+        <!-- Floating Action Button -->
+        <button class="fab" onclick="openModal('income')" aria-label="Add Transaction">+</button>
+    </div>
+
+    <!-- Add/Edit Transaction Modal -->
+    <div class="modal" id="tx-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">บันทึกรายการ</h3>
+                <button class="close-modal-btn" onclick="closeModal()">✕</button>
+            </div>
+            <form id="tx-form">
+                <!-- Type Selector -->
+                <div class="form-group">
+                    <label class="form-label">ประเภทรายการ</label>
+                    <div class="type-selector">
+                        <div class="type-btn income-type selected" id="type-income">รายรับ (+)</div>
+                        <div class="type-btn expense-type" id="type-expense">รายจ่าย (-)</div>
+                    </div>
+                </div>
+
+                <!-- Date -->
+                <div class="form-group">
+                    <label class="form-label" for="tx-date">วันที่</label>
+                    <input type="date" id="tx-date" required>
+                </div>
+
+                <!-- Amount -->
+                <div class="form-group">
+                    <label class="form-label" for="tx-amount">จำนวนเงิน (บาท)</label>
+                    <input type="number" id="tx-amount" step="any" placeholder="0.00" inputmode="decimal" required>
+                </div>
+
+                <!-- Category -->
+                <div class="form-group">
+                    <label class="form-label" for="tx-category">หมวดหมู่</label>
+                    <select id="tx-category" required>
+                        <!-- Loaded dynamically via JS -->
+                    </select>
+                </div>
+
+                <!-- Description -->
+                <div class="form-group">
+                    <label class="form-label" for="tx-desc">รายละเอียดเพิ่มเติม (ไม่บังคับ)</label>
+                    <input type="text" id="tx-desc" placeholder="เช่น ขายของเย็น 2 ชิ้น, จ่ายค่าส่งของ">
+                </div>
+
+                <button type="submit" class="submit-btn">บันทึกรายการ</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="settings-modal">
+        <div class="modal-content" style="max-height: 85vh; overflow-y: auto; border-radius: 24px 24px 0 0;">
+            <div class="modal-header">
+                <h3 class="modal-title">⚙️ ตั้งค่าระบบ</h3>
+                <button class="close-modal-btn" onclick="closeSettingsModal()">✕</button>
+            </div>
+            
+            <div style="margin-bottom: 24px;">
+                <h4 style="margin-bottom: 12px; font-size: 15px; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 6px;">✨ จัดการปุ่มบันทึกด่วน</h4>
+                <!-- Form to Add Quick Add -->
+                <form id="add-quick-btn-form" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; background: rgba(0,0,0,0.02); padding: 12px; border-radius: 12px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <input type="text" id="new-q-label" placeholder="ชื่อปุ่ม (เช่น ขายชาเขียว)" required style="padding: 8px; font-size: 13px;">
+                        <input type="number" id="new-q-amount" placeholder="จำนวนเงินเริ่มต้น" style="padding: 8px; font-size: 13px;">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <select id="new-q-type" required style="padding: 8px; font-size: 13px;">
+                            <option value="income">รายรับ (+)</option>
+                            <option value="expense">รายจ่าย (-)</option>
+                        </select>
+                        <select id="new-q-category" required style="padding: 8px; font-size: 13px;">
+                            <!-- Dynamically loaded categories -->
+                        </select>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 3fr 1fr; gap: 8px;">
+                        <input type="text" id="new-q-icon" placeholder="ไอคอน (เช่น 🍵, ☕, 💰)" required style="padding: 8px; font-size: 13px;">
+                        <button type="submit" class="submit-btn" style="margin-top: 0; padding: 8px; font-size: 13px;">เพิ่มปุ่ม</button>
+                    </div>
+                </form>
+                
+                <!-- List of Quick Buttons -->
+                <div id="settings-quick-btns-list" style="display: flex; flex-direction: column; gap: 8px; max-height: 180px; overflow-y: auto; padding-right: 4px;">
+                    <!-- Loaded dynamically -->
+                </div>
+            </div>
+
+            <div>
+                <h4 style="margin-bottom: 12px; font-size: 15px; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 6px;">📂 จัดการหมวดหมู่</h4>
+                <!-- Form to Add Category -->
+                <form id="add-category-form" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; background: rgba(0,0,0,0.02); padding: 12px; border-radius: 12px;">
+                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 8px;">
+                        <input type="text" id="new-cat-name" placeholder="ชื่อหมวดหมู่" required style="padding: 8px; font-size: 13px;">
+                        <input type="text" id="new-cat-icon" placeholder="ไอคอน (เช่น 🍰)" required style="padding: 8px; font-size: 13px;">
+                        <select id="new-cat-type" required style="padding: 8px; font-size: 13px;">
+                            <option value="income">รายรับ</option>
+                            <option value="expense">รายจ่าย</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="submit-btn" style="margin-top: 0; padding: 8px; font-size: 13px;">เพิ่มหมวดหมู่</button>
+                </form>
+
+                <!-- List of Categories -->
+                <div id="settings-categories-list" style="display: flex; flex-direction: column; gap: 8px; max-height: 180px; overflow-y: auto; padding-right: 4px;">
+                    <!-- Loaded dynamically -->
+                </div>
+            </div>
+
+            <!-- Backup & Restore -->
+            <div style="margin-top: 24px; padding-top: 16px; border-top: 2px dashed rgba(120, 120, 120, 0.2);">
+                <h4 style="margin-bottom: 12px; font-size: 15px; border-bottom: 1px solid rgba(120,120,120,0.1); padding-bottom: 6px;">💾 สำรองและกู้คืนข้อมูล</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <button type="button" class="submit-btn" onclick="exportBackup()" style="margin-top: 0; background: #2e7d32; font-size: 13px; padding: 10px;">📥 สำรองข้อมูล (Export)</button>
+                    <button type="button" class="submit-btn" onclick="triggerImport()" style="margin-top: 0; background: #0277bd; font-size: 13px; padding: 10px;">📤 นำเข้าข้อมูล (Import)</button>
+                </div>
+                <input type="file" id="import-file-input" accept=".json" style="display: none;" onchange="importBackup(event)">
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
