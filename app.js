@@ -632,5 +632,59 @@ window.importBackup = function(event) {
     event.target.value = '';
 };
 
+window.generateAndDownloadIcon = function() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 512;
+    const ctx = canvas.getContext('2d');
+
+    // 1. Draw rounded background gradient
+    const gradient = ctx.createLinearGradient(0, 0, 512, 512);
+    gradient.addColorStop(0, '#6a9c75'); // Matcha Green Light
+    gradient.addColorStop(1, '#4e7c59'); // Matcha Green Dark
+    ctx.fillStyle = gradient;
+    
+    // Draw rounded rect helper
+    function roundRect(x, y, w, h, r) {
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.arcTo(x + w, y, x + w, y + h, r);
+        ctx.arcTo(x + w, y + h, x, y + h, r);
+        ctx.arcTo(x, y + h, x, y, r);
+        ctx.arcTo(x, y, x + w, y, r);
+        ctx.closePath();
+        ctx.fill();
+    }
+    
+    // Fill background
+    roundRect(0, 0, 512, 512, 110);
+
+    // 2. Draw soft central inner glow circle
+    ctx.beginPath();
+    ctx.arc(256, 256, 180, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+    ctx.fill();
+
+    // 3. Draw emoji shadow
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.25)';
+    ctx.shadowBlur = 24;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 12;
+
+    // 4. Draw Emoji Icon
+    ctx.font = '240px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('🍹', 256, 266);
+
+    // Trigger download
+    const link = document.createElement('a');
+    link.download = 'icon.png';
+    link.href = canvas.toDataURL('image/png');
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+};
+
 // Initial Run
 render();

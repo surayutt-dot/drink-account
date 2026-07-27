@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>บัญชีธุรกิจ - บันทึกรายรับรายจ่าย</title>
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Mobile Web App Capable (PWA) -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="บัญชีร้านน้ำ">
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="icon" type="image/png" href="icon.png">
 </head>
 <body>
 
@@ -189,6 +196,13 @@
                     <button type="button" class="submit-btn" onclick="triggerImport()" style="margin-top: 0; background: #0277bd; font-size: 13px; padding: 10px;">📤 นำเข้าข้อมูล (Import)</button>
                 </div>
                 <input type="file" id="import-file-input" accept=".json" style="display: none;" onchange="importBackup(event)">
+            </div>
+
+            <!-- App Icon Download -->
+            <div style="margin-top: 24px; padding-top: 16px; border-top: 2px dashed rgba(120, 120, 120, 0.2);">
+                <h4 style="margin-bottom: 12px; font-size: 15px; border-bottom: 1px solid rgba(120,120,120,0.1); padding-bottom: 6px;">📱 สร้างไอคอนแอปบนมือถือ</h4>
+                <p style="font-size: 12px; opacity: 0.8; margin-bottom: 12px; line-height: 1.4;">ดาวน์โหลดรูปภาพไอคอนนี้ แล้วนำไปใส่ไว้คู่กับไฟล์โครงการของคุณในชื่อ <strong>icon.png</strong> เพื่อแสดงไอคอนแอปสวยงามบนหน้าจอมือถือของคุณ</p>
+                <button type="button" class="submit-btn" onclick="generateAndDownloadIcon()" style="margin-top: 0; background: var(--primary); font-size: 13px; padding: 10px;">🎨 ดาวน์โหลดไอคอนแอป (icon.png)</button>
             </div>
         </div>
     </div>
